@@ -142,9 +142,11 @@ local function onInputBegan(input)
         startInputPos = input.Position
         startPos = frame.Position
 
-        -- Blokir input agar tidak mempengaruhi kamera
-        contextActionService:BindActionAtPriority("BlockCameraInput", function() return Enum.ContextActionResult.Sink end, false, 10000, input.UserInputType)
-        
+        -- Blokir input sementara untuk menggeser UI
+        contextActionService:BindActionAtPriority("BlockCameraInput", function()
+            return Enum.ContextActionResult.Sink
+        end, false, 10000, input.UserInputType)
+
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
