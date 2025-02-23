@@ -11,7 +11,7 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 250)
+frame.Size = UDim2.new(0, 250, 0, 300) -- Tinggi frame ditambah untuk fitur teleport
 frame.Position = UDim2.new(0.05, 0, 0.1, 0)
 frame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Merah
 frame.BorderSizePixel = 2
@@ -88,6 +88,60 @@ copiedLabel.Text = "Copied!"
 copiedLabel.Visible = false
 copiedLabel.Parent = screenGui
 
+-- Teleport Section (Hitam)
+local teleportContainer = Instance.new("Frame")
+teleportContainer.Size = UDim2.new(1, 0, 0, 70)
+teleportContainer.Position = UDim2.new(0, 0, 0, 230)
+teleportContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+teleportContainer.Parent = frame
+
+local teleportTitle = Instance.new("TextLabel")
+teleportTitle.Size = UDim2.new(1, 0, 0, 20)
+teleportTitle.BackgroundTransparency = 1
+teleportTitle.Text = "Teleport"
+teleportTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
+teleportTitle.Font = Enum.Font.GothamBlack
+teleportTitle.TextSize = 16
+teleportTitle.Parent = teleportContainer
+
+local teleportInput = Instance.new("TextBox")
+teleportInput.Size = UDim2.new(1, -10, 0, 20)
+teleportInput.Position = UDim2.new(0, 5, 0, 25)
+teleportInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+teleportInput.TextColor3 = Color3.fromRGB(0, 0, 0)
+teleportInput.Font = Enum.Font.SourceSans
+teleportInput.TextSize = 14
+teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
+teleportInput.Parent = teleportContainer
+
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(1, -10, 0, 20)
+teleportButton.Position = UDim2.new(0, 5, 0, 50)
+teleportButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportButton.Font = Enum.Font.GothamBold
+teleportButton.TextSize = 14
+teleportButton.Text = "Teleport"
+teleportButton.Parent = teleportContainer
+
+-- Fungsi untuk teleport ke koordinat yang dimasukkan
+teleportButton.MouseButton1Click:Connect(function()
+    local coords = teleportInput.Text
+    local x, y, z = coords:match("([%d%.%-]+),%s*([%d%.%-]+),%s*([%d%.%-]+)")
+    
+    if x and y and z then
+        x, y, z = tonumber(x), tonumber(y), tonumber(z)
+        if rootPart then
+            rootPart.CFrame = CFrame.new(x, y, z)
+            print("Teleport ke koordinat:", x, y, z)
+        else
+            warn("RootPart tidak ditemukan!")
+        end
+    else
+        warn("Format koordinat tidak valid! Gunakan format: X, Y, Z")
+    end
+end)
+
 local startTime = tick()
 runService.RenderStepped:Connect(function()
     if character and rootPart then
@@ -110,7 +164,7 @@ posLabel.MouseButton1Click:Connect(function()
         local coords = posLabel.Text:gsub("📍 ", "")
         setclipboard(coords)
     else
-        warn("Clipboard tidak didukung di perangkat ini!")
+        warn("Clipboard is not supported on this device!")
     end
     copiedLabel.Visible = true
     wait(1)
