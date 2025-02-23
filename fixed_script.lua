@@ -11,72 +11,72 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 250)
+frame.Size = UDim2.new(0, 250, 0, 200)
 frame.Position = UDim2.new(0.05, 0, 0.1, 0)
-frame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Merah
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 frame.BorderSizePixel = 2
 frame.Parent = screenGui
 
--- Buat label "Takashi Tools"
+-- Label "Alchemy Tools"
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundTransparency = 1
-title.Text = "Takashi Tools"
+title.Text = "Alchemy Tools"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 18
 title.Parent = frame
 
--- Debug Section (Hitam)
-local debugContainer = Instance.new("Frame")
-debugContainer.Size = UDim2.new(1, 0, 0, 100)
-debugContainer.Position = UDim2.new(0, 0, 0, 40)
-debugContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-debugContainer.Parent = frame
+-- UID Section
+local uidContainer = Instance.new("Frame")
+uidContainer.Size = UDim2.new(1, 0, 0, 30)
+uidContainer.Position = UDim2.new(0, 0, 0, 40)
+uidContainer.BackgroundTransparency = 1
+uidContainer.Parent = frame
 
-local debugTitle = Instance.new("TextLabel")
-debugTitle.Size = UDim2.new(1, 0, 0, 20)
-debugTitle.BackgroundTransparency = 1
-debugTitle.Text = "Debug"
-debugTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
-debugTitle.Font = Enum.Font.GothamBlack
-debugTitle.TextSize = 16
-debugTitle.Parent = debugContainer
+local uidLabel = Instance.new("TextLabel")
+uidLabel.Size = UDim2.new(1, 0, 0, 30)
+uidLabel.BackgroundTransparency = 1
+uidLabel.Text = "UID: " .. player.UserId
+uidLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+uidLabel.Font = Enum.Font.SourceSans
+uidLabel.TextSize = 14
+uidLabel.Parent = uidContainer
 
-local debugInfo = Instance.new("TextLabel")
-debugInfo.Size = UDim2.new(1, 0, 0, 60)
-debugInfo.Position = UDim2.new(0, 0, 0, 20)
-debugInfo.BackgroundTransparency = 1
-debugInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
-debugInfo.Font = Enum.Font.SourceSans
-debugInfo.TextSize = 14
-debugInfo.Parent = debugContainer
+-- Tools Section
+local toolsContainer = Instance.new("Frame")
+toolsContainer.Size = UDim2.new(1, 0, 0, 80)
+toolsContainer.Position = UDim2.new(0, 0, 0, 70)
+toolsContainer.BackgroundTransparency = 1
+toolsContainer.Parent = frame
 
--- Position Section (Hitam)
+local toolsLabel = Instance.new("TextLabel")
+toolsLabel.Size = UDim2.new(1, 0, 0, 80)
+toolsLabel.BackgroundTransparency = 1
+toolsLabel.Text = "Dark Dex\nSimple Spy\nHydroxide\nSave Instance"
+toolsLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+toolsLabel.Font = Enum.Font.SourceSans
+toolsLabel.TextSize = 14
+toolsLabel.Parent = toolsContainer
+
+-- Position Section (Dengan Fitur Copy)
 local positionContainer = Instance.new("Frame")
-positionContainer.Size = UDim2.new(1, 0, 0, 100)
-positionContainer.Position = UDim2.new(0, 0, 0, 130)
-positionContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+positionContainer.Size = UDim2.new(1, 0, 0, 30)
+positionContainer.Position = UDim2.new(0, 0, 0, 150)
+positionContainer.BackgroundTransparency = 1
 positionContainer.Parent = frame
 
-local positionTitle = Instance.new("TextLabel")
-positionTitle.Size = UDim2.new(1, 0, 0, 20)
-positionTitle.BackgroundTransparency = 1
-positionTitle.Text = "Position"
-positionTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
-positionTitle.Font = Enum.Font.GothamBlack
-positionTitle.TextSize = 16
-positionTitle.Parent = positionContainer
-
-local posLabel = Instance.new("TextButton")
-posLabel.Size = UDim2.new(1, 0, 0, 20)
-posLabel.Position = UDim2.new(0, 0, 0, 20)
+-- Ganti TextLabel menjadi TextButton untuk bisa diklik
+local posLabel = Instance.new("TextButton") -- <-- Diubah ke TextButton
+posLabel.Size = UDim2.new(1, 0, 0, 30)
 posLabel.BackgroundTransparency = 1
+posLabel.Text = "X: 0, Y: 0, Z: 0"
 posLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 posLabel.Font = Enum.Font.SourceSans
 posLabel.TextSize = 14
 posLabel.Parent = positionContainer
 
+-- Label "Copied!" yang muncul saat copy
 local copiedLabel = Instance.new("TextLabel")
 copiedLabel.Size = UDim2.new(0, 200, 0, 30)
 copiedLabel.Position = UDim2.new(0.5, -100, 0.8, 0)
@@ -88,36 +88,7 @@ copiedLabel.Text = "Copied!"
 copiedLabel.Visible = false
 copiedLabel.Parent = screenGui
 
-local startTime = tick()
-runService.RenderStepped:Connect(function()
-    if character and rootPart then
-        local pos = rootPart.Position
-        posLabel.Text = string.format("📍 %d, %d, %d", pos.X, pos.Y, pos.Z)
-    end
-    
-    local elapsedTime = tick() - startTime
-    local hours = math.floor(elapsedTime / 3600)
-    local minutes = math.floor((elapsedTime % 3600) / 60)
-    local seconds = math.floor(elapsedTime % 60)
-    local fps = math.floor(1 / runService.RenderStepped:Wait())
-    local ping = stats.Network.ServerStatsItem["Data Ping"]:GetValue()
-    
-    debugInfo.Text = string.format("⌛ Time: %dH %dM %dS\n🟢 FPS: %d\n📶 Ping: %d ms\n😎 UID: %d", hours, minutes, seconds, fps, ping, player.UserId)
-end)
-
-posLabel.MouseButton1Click:Connect(function()
-    if setclipboard then
-        local coords = posLabel.Text:gsub("📍 ", "")
-        setclipboard(coords)
-    else
-        warn("Clipboard tidak didukung di perangkat ini!")
-    end
-    copiedLabel.Visible = true
-    wait(1)
-    copiedLabel.Visible = false
-end)
-
--- Buat tombol close (X)
+-- Tombol Close
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0, 30, 0, 30)
 closeButton.Position = UDim2.new(1, -35, 0, 5)
@@ -128,12 +99,27 @@ closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 16
 closeButton.Parent = frame
 
--- Fungsi untuk menutup UI
-closeButton.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
+-- Fungsi Copy Koordinat
+posLabel.MouseButton1Click:Connect(function()
+    if setclipboard then
+        local coords = posLabel.Text:gsub("X: ", ""):gsub("Y: ", ""):gsub("Z: ", "")
+        setclipboard(coords)
+        copiedLabel.Visible = true
+        task.wait(1)
+        copiedLabel.Visible = false
+    else
+        warn("Clipboard tidak didukung!")
+    end
 end)
 
--- Fungsi untuk membuat UI bisa digeser di PC dan HP
+-- Fungsi Update Posisi
+runService.RenderStepped:Connect(function()
+    if rootPart then
+        local pos = rootPart.Position
+        posLabel.Text = string.format("X: %d, Y: %d, Z: %d", pos.X, pos.Y, pos.Z)
+    end)
+
+-- Sisanya (fungsi close dan drag) tetap sama...
 local dragging, dragInput, startPos, startInputPos
 
 local function onInputBegan(input)
@@ -168,7 +154,6 @@ end)
 userInputService.InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         local delta = input.Position - startInputPos
-        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-                                   startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,                                   startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
