@@ -40,12 +40,14 @@ gradient.Parent = frame
 
 -- Buat label "Takashi Tools"
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
+title.Size = UDim2.new(1, -60, 0, 40) -- Kurangi lebar untuk memberi ruang ke tombol minimize dan close
+title.Position = UDim2.new(0, 10, 0, 0) -- Geser ke kiri
 title.BackgroundTransparency = 1
 title.Text = "Takashi Tools"
 title.TextColor3 = Color3.fromRGB(0, 0, 0)
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 24
+title.TextXAlignment = Enum.TextXAlignment.Left -- Geser teks ke kiri
 title.Parent = frame
 
 -- Debug Section
@@ -229,27 +231,65 @@ closeButton.MouseButton1Click:Connect(function()
     screenGui:Destroy()
 end)
 
+-- Buat tombol minimize
+local minimizeButton = Instance.new("TextButton")
+minimizeButton.Size = UDim2.new(0, 30, 0, 30)
+minimizeButton.Position = UDim2.new(1, -70, 0, 5) -- Posisi di sebelah tombol close
+minimizeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+minimizeButton.Text = "-"
+minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeButton.Font = Enum.Font.GothamBold
+minimizeButton.TextSize = 16
+minimizeButton.Parent = frame
+
+-- Animasi tombol minimize
+minimizeButton.MouseEnter:Connect(function()
+    tweenService:Create(minimizeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(150, 150, 150)}):Play()
+end)
+
+minimizeButton.MouseLeave:Connect(function()
+    tweenService:Create(minimizeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+end)
+
+-- Variabel untuk menyimpan state minimize
+local isMinimized = false
+
+-- Fungsi untuk minimize/maximize UI
+minimizeButton.MouseButton1Click:Connect(function()
+    if isMinimized then
+        -- Kembalikan ke ukuran normal
+        frame.Size = UDim2.new(0, 300, 0, 400)
+        isMinimized = false
+    else
+        -- Minimize UI, hanya tampilkan title
+        frame.Size = UDim2.new(0, 300, 0, 40)
+        isMinimized = true
+    end
+end)
+
 -- Fungsi untuk membuat UI bisa digeser di PC dan HP
 local dragging, dragInput, startPos, startInputPos
 
 local function onInputBegan(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        startInputPos = input.Position
-        startPos = frame.Position
+    -- Cek apakah input terjadi di dalam area frame UI
+    local mousePos = userInputService:GetMouseLocation()
+    local framePos = frame.AbsolutePosition
+    local frameSize = frame.AbsoluteSize
 
-        -- Blokir input sementara untuk menggeser UI
-        contextActionService:BindActionAtPriority("BlockCameraInput", function()
-            return Enum.ContextActionResult.Sink
-        end, false, 10000, input.UserInputType)
+    if mousePos.X >= framePos.X and mousePos.X <= framePos.X + frameSize.X and
+       mousePos.Y >= framePos.Y and mousePos.Y <= framePos.Y + frameSize.Y then
+        -- Jika input terjadi di dalam area UI, mulai menggeser UI
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            startInputPos = input.Position
+            startPos = frame.Position
 
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-                -- Lepaskan blokir input setelah selesai menggeser
-                contextActionService:UnbindAction("BlockCameraInput")
-            end
-        end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
     end
 end
 
