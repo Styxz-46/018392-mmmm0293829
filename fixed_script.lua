@@ -130,11 +130,11 @@ teleportTitle.Font = Enum.Font.GothamBlack
 teleportTitle.TextSize = 16
 teleportTitle.Parent = teleportContainer
 
-local teleportInput = Instance.new("TextBox")
+local teleportInput = Instance.new("")
 teleportInput.Size = UDim2.new(1, -10, 0, 20)
 teleportInput.Position = UDim2.new(0, 5, 0, 25)
-teleportInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-teleportInput.TextColor3 = Color3.fromRGB(0, 0, 0)
+teleportInput.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+teleportInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 teleportInput.Font = Enum.Font.SourceSans
 teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
