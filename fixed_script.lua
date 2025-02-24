@@ -271,28 +271,23 @@ end)
 local dragging, dragInput, startPos, startInputPos
 
 local function onInputBegan(input)
-    -- Cek apakah input terjadi di dalam area frame UI
-    local mousePos = userInputService:GetMouseLocation()
-    local framePos = frame.AbsolutePosition
-    local frameSize = frame.AbsoluteSize
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        startInputPos = input.Position
+        startPos = frame.Position
 
-    if mousePos.X >= framePos.X and mousePos.X <= framePos.X + frameSize.X and
-       mousePos.Y >= framePos.Y and mousePos.Y <= framePos.Y + frameSize.Y then
-        -- Jika input terjadi di dalam area UI, mulai menggeser UI
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            startInputPos = input.Position
-            startPos = frame.Position
+        -- Blokir input sementara untuk menggeser UI
+        contextActionService:BindActionAtPriority("BlockCameraInput", function()
+            return Enum.ContextActionResult.Sink
+        end, false, 10000, input.UserInputType)
 
-            -- Blokir input kamera hanya saat menggeser UI
-            input.Used = true -- Tandai input sebagai "digunakan" agar tidak mempengaruhi kamera
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                -- Lepaskan blokir input setelah selesai menggeser
+                contextActionService:UnbindAction("BlockCameraInput")
+            end
+        end)
     end
 end
 
@@ -301,11 +296,6 @@ frame.InputBegan:Connect(onInputBegan)
 frame.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
-        
-        -- Blokir input kamera selama menggeser UI
-        if dragging then
-            input.Used = true
-        end
     end
 end)
 
