@@ -43,7 +43,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.BackgroundTransparency = 1
 title.Text = "Takashi Tools"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextColor3 = Color3.fromRGB(0, 0, 0)
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 24
 title.Parent = frame
@@ -136,7 +136,6 @@ teleportInput.TextColor3 = Color3.fromRGB(0, 0, 0)
 teleportInput.Font = Enum.Font.SourceSans
 teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
-teleportInput.Text = ""
 teleportInput.Parent = teleportContainer
 
 local teleportButton = Instance.new("TextButton")
