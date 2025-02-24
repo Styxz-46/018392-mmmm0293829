@@ -284,6 +284,9 @@ local function onInputBegan(input)
             startInputPos = input.Position
             startPos = frame.Position
 
+            -- Blokir input kamera hanya saat menggeser UI
+            input.Used = true -- Tandai input sebagai "digunakan" agar tidak mempengaruhi kamera
+
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -298,6 +301,11 @@ frame.InputBegan:Connect(onInputBegan)
 frame.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
+        
+        -- Blokir input kamera selama menggeser UI
+        if dragging then
+            input.Used = true
+        end
     end
 end)
 
