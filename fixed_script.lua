@@ -5,33 +5,55 @@ local runService = game:GetService("RunService")
 local userInputService = game:GetService("UserInputService")
 local stats = game:GetService("Stats")
 local contextActionService = game:GetService("ContextActionService")
+local tweenService = game:GetService("TweenService")
 
 -- Buat GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 300) -- Tinggi frame ditambah untuk fitur teleport
+frame.Size = UDim2.new(0, 300, 0, 400) -- Lebar dan tinggi frame ditambah
 frame.Position = UDim2.new(0.05, 0, 0.1, 0)
-frame.BackgroundColor3 = Color3.fromRGB(150, 0, 0) -- Merah
-frame.BorderSizePixel = 2
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Warna latar belakang gelap
+frame.BorderSizePixel = 0
+frame.ClipsDescendants = true
 frame.Parent = screenGui
+
+-- Tambahkan bayangan
+local shadow = Instance.new("ImageLabel")
+shadow.Size = UDim2.new(1, 10, 1, 10)
+shadow.Position = UDim2.new(0, -5, 0, -5)
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://1316045217" -- ID gambar bayangan
+shadow.ScaleType = Enum.ScaleType.Slice
+shadow.SliceCenter = Rect.new(10, 10, 118, 118)
+shadow.Parent = frame
+
+-- Buat gradient background
+local gradient = Instance.new("UIGradient")
+gradient.Rotation = 90
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 50, 50)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 30, 30))
+})
+gradient.Parent = frame
 
 -- Buat label "Takashi Tools"
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 30)
+title.Size = UDim2.new(1, 0, 0, 40)
 title.BackgroundTransparency = 1
 title.Text = "Takashi Tools"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBlack
-title.TextSize = 18
+title.TextSize = 24
 title.Parent = frame
 
--- Debug Section (Hitam)
+-- Debug Section
 local debugContainer = Instance.new("Frame")
-debugContainer.Size = UDim2.new(1, 0, 0, 100)
-debugContainer.Position = UDim2.new(0, 0, 0, 40)
-debugContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+debugContainer.Size = UDim2.new(1, -20, 0, 100)
+debugContainer.Position = UDim2.new(0, 10, 0, 50)
+debugContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+debugContainer.BorderSizePixel = 0
 debugContainer.Parent = frame
 
 local debugTitle = Instance.new("TextLabel")
@@ -52,11 +74,12 @@ debugInfo.Font = Enum.Font.SourceSans
 debugInfo.TextSize = 14
 debugInfo.Parent = debugContainer
 
--- Position Section (Hitam)
+-- Position Section
 local positionContainer = Instance.new("Frame")
-positionContainer.Size = UDim2.new(1, 0, 0, 100)
-positionContainer.Position = UDim2.new(0, 0, 0, 130)
-positionContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+positionContainer.Size = UDim2.new(1, -20, 0, 100)
+positionContainer.Position = UDim2.new(0, 10, 0, 160)
+positionContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+positionContainer.BorderSizePixel = 0
 positionContainer.Parent = frame
 
 local positionTitle = Instance.new("TextLabel")
@@ -88,11 +111,12 @@ copiedLabel.Text = "Copied!"
 copiedLabel.Visible = false
 copiedLabel.Parent = screenGui
 
--- Teleport Section (Hitam)
+-- Teleport Section
 local teleportContainer = Instance.new("Frame")
-teleportContainer.Size = UDim2.new(1, 0, 0, 70)
-teleportContainer.Position = UDim2.new(0, 0, 0, 230)
-teleportContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+teleportContainer.Size = UDim2.new(1, -20, 0, 70)
+teleportContainer.Position = UDim2.new(0, 10, 0, 270)
+teleportContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+teleportContainer.BorderSizePixel = 0
 teleportContainer.Parent = frame
 
 local teleportTitle = Instance.new("TextLabel")
@@ -112,6 +136,7 @@ teleportInput.TextColor3 = Color3.fromRGB(0, 0, 0)
 teleportInput.Font = Enum.Font.SourceSans
 teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
+teleportInput.Teks = ""
 teleportInput.Parent = teleportContainer
 
 local teleportButton = Instance.new("TextButton")
@@ -124,6 +149,15 @@ teleportButton.TextSize = 14
 teleportButton.Text = "Teleport"
 teleportButton.Parent = teleportContainer
 
+-- Animasi tombol teleport
+teleportButton.MouseEnter:Connect(function()
+    tweenService:Create(teleportButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 150, 150)}):Play()
+end)
+
+teleportButton.MouseLeave:Connect(function()
+    tweenService:Create(teleportButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 100, 100)}):Play()
+end)
+
 -- Fungsi untuk teleport ke koordinat yang dimasukkan
 teleportButton.MouseButton1Click:Connect(function()
     local coords = teleportInput.Text
@@ -133,7 +167,7 @@ teleportButton.MouseButton1Click:Connect(function()
         x, y, z = tonumber(x), tonumber(y), tonumber(z)
         if rootPart then
             rootPart.CFrame = CFrame.new(x, y, z)
-            print("Teleport ke koordinat:", x, y, z)
+            print("Teleport To Coordinates:", x, y, z)
         else
             warn("RootPart tidak ditemukan!")
         end
@@ -146,7 +180,7 @@ local startTime = tick()
 runService.RenderStepped:Connect(function()
     if character and rootPart then
         local pos = rootPart.Position
-        posLabel.Text = string.format("📍 %d, %d, %d", pos.X, pos.Y, pos.Z)
+        posLabel.Text = string.format("📍: %d, %d, %d", pos.X, pos.Y, pos.Z)
     end
     
     local elapsedTime = tick() - startTime
@@ -161,7 +195,7 @@ end)
 
 posLabel.MouseButton1Click:Connect(function()
     if setclipboard then
-        local coords = posLabel.Text:gsub("📍 ", "")
+        local coords = posLabel.Text:gsub("📍: ", "")
         setclipboard(coords)
     else
         warn("Clipboard is not supported on this device!")
@@ -181,6 +215,15 @@ closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 16
 closeButton.Parent = frame
+
+-- Animasi tombol close
+closeButton.MouseEnter:Connect(function()
+    tweenService:Create(closeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+
+closeButton.MouseLeave:Connect(function()
+    tweenService:Create(closeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(200, 0, 0)}):Play()
+end)
 
 -- Fungsi untuk menutup UI
 closeButton.MouseButton1Click:Connect(function()
