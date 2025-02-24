@@ -136,7 +136,7 @@ teleportInput.TextColor3 = Color3.fromRGB(0, 0, 0)
 teleportInput.Font = Enum.Font.SourceSans
 teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
-teleportInput.Teks = ""
+teleportInput.Text = ""
 teleportInput.Parent = teleportContainer
 
 local teleportButton = Instance.new("TextButton")
