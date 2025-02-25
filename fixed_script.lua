@@ -130,7 +130,7 @@ teleportTitle.Font = Enum.Font.GothamBlack
 teleportTitle.TextSize = 16
 teleportTitle.Parent = teleportContainer
 
-local teleportInput = Instance.new("")
+local teleportInput = Instance.new("TextBox")
 teleportInput.Size = UDim2.new(1, -10, 0, 20)
 teleportInput.Position = UDim2.new(0, 5, 0, 25)
 teleportInput.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -138,7 +138,20 @@ teleportInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 teleportInput.Font = Enum.Font.SourceSans
 teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
+teleportInput.Text = "" -- Pastikan TextBox kosong saat pertama kali dibuat
 teleportInput.Parent = teleportContainer
+
+-- Fungsi untuk menghapus teks saat TextBox mendapatkan fokus
+teleportInput.Focused:Connect(function()
+    teleportInput.Text = ""
+end)
+
+-- Fungsi untuk mengembalikan placeholder jika TextBox kosong saat kehilangan fokus
+teleportInput.FocusLost:Connect(function()
+    if teleportInput.Text == "" then
+        teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
+    end
+end)
 
 local teleportButton = Instance.new("TextButton")
 teleportButton.Size = UDim2.new(1, -10, 0, 20)
@@ -175,6 +188,8 @@ teleportButton.MouseButton1Click:Connect(function()
     else
         warn("Format koordinat tidak valid! Gunakan format: X, Y, Z")
     end
+    teleportInput.Text = "" -- Kosongkan TextBox setelah teleport
+    teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)" -- Kembalikan placeholder
 end)
 
 local startTime = tick()
