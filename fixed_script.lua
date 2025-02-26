@@ -175,7 +175,13 @@ end)
 -- Fungsi untuk teleport ke koordinat yang dimasukkan
 teleportButton.MouseButton1Click:Connect(function()
     local coords = teleportInput.Text
-    local x, y, z = coords:match("([%d%.%-]+),%s*([%d%.%-]+),%s*([%d%.%-]+)")
+
+    -- Bersihkan teks dari karakter yang tidak diperlukan
+    coords = coords:gsub("X:", ""):gsub("Y:", ""):gsub("Z:", "") -- Hapus "X:", "Y:", "Z:"
+    coords = coords:gsub("%s", "") -- Hapus spasi
+
+    -- Ekstrak nilai X, Y, Z
+    local x, y, z = coords:match("([%d%.%-]+),([%d%.%-]+),([%d%.%-]+)")
     
     if x and y and z then
         x, y, z = tonumber(x), tonumber(y), tonumber(z)
@@ -186,9 +192,11 @@ teleportButton.MouseButton1Click:Connect(function()
             warn("RootPart tidak ditemukan!")
         end
     else
-        warn("Format koordinat tidak valid! Gunakan format: X, Y, Z")
+        warn("Format koordinat tidak valid! Gunakan format: X: -4287, Y: -11175, Z: 4000 atau -4287, -11175, 4000")
     end
-    teleportInput.Text = "" -- Kosongkan TextBox setelah teleport
+
+    -- Kosongkan TextBox setelah teleport
+    teleportInput.Text = ""
     teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)" -- Kembalikan placeholder
 end)
 
