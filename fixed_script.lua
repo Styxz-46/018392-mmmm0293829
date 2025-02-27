@@ -215,6 +215,11 @@ teleportButton.MouseButton1Click:Connect(function()
     -- Bersihkan teks dari karakter yang tidak diperlukan
     coords = coords:gsub("X:", ""):gsub("Y:", ""):gsub("Z:", "") -- Hapus "X:", "Y:", "Z:"
     coords = coords:gsub("%s", "") -- Hapus spasi
+    -- Ganti titik dengan koma jika ada
+    coords = coords:gsub("%.", ",")
+
+    -- Jika koordinat menggunakan spasi sebagai pemisah, ganti dengan koma
+    coords = coords:gsub(" ", ",")
 
     -- Ekstrak nilai X, Y, Z
     local x, y, z = coords:match("([%d%.%-]+),([%d%.%-]+),([%d%.%-]+)")
