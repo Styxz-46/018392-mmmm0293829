@@ -11,13 +11,19 @@ local tweenService = game:GetService("TweenService")
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
+-- Frame Utama
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 400) -- Lebar dan tinggi frame ditambah
+frame.Size = UDim2.new(0, 300, 0, 400) -- Ukuran frame
 frame.Position = UDim2.new(0.05, 0, 0.1, 0)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Warna latar belakang gelap
 frame.BorderSizePixel = 0
 frame.ClipsDescendants = true
 frame.Parent = screenGui
+
+-- Tambahkan rounded corners
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12) -- Sudut melengkung
+corner.Parent = frame
 
 -- Tambahkan bayangan
 local shadow = Instance.new("ImageLabel")
@@ -44,7 +50,7 @@ title.Size = UDim2.new(1, -60, 0, 40) -- Kurangi lebar untuk memberi ruang ke to
 title.Position = UDim2.new(0, 10, 0, 0) -- Geser ke kiri
 title.BackgroundTransparency = 1
 title.Text = "Takashi Tools"
-title.TextColor3 = Color3.fromRGB(0, 0, 0)
+title.TextColor3 = Color3.fromRGB(255, 255, 255) -- Warna teks putih
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 24
 title.TextXAlignment = Enum.TextXAlignment.Left -- Geser teks ke kiri
@@ -57,6 +63,11 @@ debugContainer.Position = UDim2.new(0, 10, 0, 50)
 debugContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 debugContainer.BorderSizePixel = 0
 debugContainer.Parent = frame
+
+-- Tambahkan rounded corners untuk debug container
+local debugCorner = Instance.new("UICorner")
+debugCorner.CornerRadius = UDim.new(0, 8)
+debugCorner.Parent = debugContainer
 
 local debugTitle = Instance.new("TextLabel")
 debugTitle.Size = UDim2.new(1, 0, 0, 20)
@@ -83,6 +94,11 @@ positionContainer.Position = UDim2.new(0, 10, 0, 160)
 positionContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 positionContainer.BorderSizePixel = 0
 positionContainer.Parent = frame
+
+-- Tambahkan rounded corners untuk position container
+local positionCorner = Instance.new("UICorner")
+positionCorner.CornerRadius = UDim.new(0, 8)
+positionCorner.Parent = positionContainer
 
 local positionTitle = Instance.new("TextLabel")
 positionTitle.Size = UDim2.new(1, 0, 0, 20)
@@ -113,6 +129,11 @@ copiedLabel.Text = "Copied!"
 copiedLabel.Visible = false
 copiedLabel.Parent = screenGui
 
+-- Tambahkan rounded corners untuk copied label
+local copiedCorner = Instance.new("UICorner")
+copiedCorner.CornerRadius = UDim.new(0, 8)
+copiedCorner.Parent = copiedLabel
+
 -- Teleport Section
 local teleportContainer = Instance.new("Frame")
 teleportContainer.Size = UDim2.new(1, -20, 0, 70)
@@ -120,6 +141,11 @@ teleportContainer.Position = UDim2.new(0, 10, 0, 270)
 teleportContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 teleportContainer.BorderSizePixel = 0
 teleportContainer.Parent = frame
+
+-- Tambahkan rounded corners untuk teleport container
+local teleportCorner = Instance.new("UICorner")
+teleportCorner.CornerRadius = UDim.new(0, 8)
+teleportCorner.Parent = teleportContainer
 
 local teleportTitle = Instance.new("TextLabel")
 teleportTitle.Size = UDim2.new(1, 0, 0, 20)
@@ -140,6 +166,11 @@ teleportInput.TextSize = 14
 teleportInput.PlaceholderText = "Masukkan koordinat (X, Y, Z)"
 teleportInput.Text = "" -- Pastikan TextBox kosong saat pertama kali dibuat
 teleportInput.Parent = teleportContainer
+
+-- Tambahkan rounded corners untuk teleport input
+local inputCorner = Instance.new("UICorner")
+inputCorner.CornerRadius = UDim.new(0, 6)
+inputCorner.Parent = teleportInput
 
 -- Fungsi untuk menghapus teks saat TextBox mendapatkan fokus
 teleportInput.Focused:Connect(function()
@@ -162,6 +193,11 @@ teleportButton.Font = Enum.Font.GothamBold
 teleportButton.TextSize = 14
 teleportButton.Text = "Teleport"
 teleportButton.Parent = teleportContainer
+
+-- Tambahkan rounded corners untuk teleport button
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 6)
+buttonCorner.Parent = teleportButton
 
 -- Animasi tombol teleport
 teleportButton.MouseEnter:Connect(function()
@@ -240,6 +276,11 @@ closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 16
 closeButton.Parent = frame
 
+-- Tambahkan rounded corners untuk tombol close
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeButton
+
 -- Animasi tombol close
 closeButton.MouseEnter:Connect(function()
     tweenService:Create(closeButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}):Play()
@@ -264,6 +305,11 @@ minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 minimizeButton.Font = Enum.Font.GothamBold
 minimizeButton.TextSize = 16
 minimizeButton.Parent = frame
+
+-- Tambahkan rounded corners untuk tombol minimize
+local minimizeCorner = Instance.new("UICorner")
+minimizeCorner.CornerRadius = UDim.new(0, 8)
+minimizeCorner.Parent = minimizeButton
 
 -- Animasi tombol minimize
 minimizeButton.MouseEnter:Connect(function()
