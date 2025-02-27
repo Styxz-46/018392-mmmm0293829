@@ -342,54 +342,41 @@ minimizeButton.MouseButton1Click:Connect(function()
 end)
 
 -- Fungsi untuk membuat UI bisa digeser di PC dan HP
-function dragify(Frame, object)
-    dragToggle = nil
-    dragSpeed = .25
-    dragInput = nil
-    dragStart = nil
-    dragPos = nil
-    function updateInput(input)
-        Delta = input.Position - dragStart
-        Position =
-            UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
-        game:GetService("TweenService"):Create(object, TweenInfo.new(dragSpeed), {Position = Position}):Play()
-    end
-    Frame.InputBegan:Connect(
-        function(input)
-            if
-                (input.UserInputType == Enum.UserInputType.MouseButton1 or
-                    input.UserInputType == Enum.UserInputType.Touch)
-            then
-                dragToggle = true
-                dragStart = input.Position
-                startPos = object.Position
-                input.Changed:Connect(
-                    function()
-                        if (input.UserInputState == Enum.UserInputState.End) then
-                            dragToggle = false
-                        end
-                    end
-                )
+local dragging, dragInput, startPos, startInputPos
+
+local function onInputBegan(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        startInputPos = input.Position
+        startPos = frame.Position
+
+        -- Blokir input sementara untuk menggeser UI
+        contextActionService:BindActionAtPriority("BlockCameraInput", function()
+            return Enum.ContextActionResult.Sink
+        end, false, 10000, input.UserInputType)
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+                -- Lepaskan blokir input setelah selesai menggeser
+                contextActionService:UnbindAction("BlockCameraInput")
             end
-        end
-    )
-    Frame.InputChanged:Connect(
-        function(input)
-            if
-                (input.UserInputType == Enum.UserInputType.MouseMovement or
-                    input.UserInputType == Enum.UserInputType.Touch)
-            then
-                dragInput = input
-            end
-        end
-    )
-    game:GetService("UserInputService").InputChanged:Connect(
-    function(input)
-        if (input == dragInput and dragToggle) then
-            updateInput(input)
-        end
+        end)
     end
-    )
 end
 
-dragify(Frame, Frame)
+frame.InputBegan:Connect(onInputBegan)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+userInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - startInputPos
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                   startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
